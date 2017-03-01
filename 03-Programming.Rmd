@@ -1,8 +1,59 @@
 # In-Class Programming Activity, Day 3
 
-Your work goes here ...
+Aidan's work goes here ...
 
+## Task 1
 
+```{r}
+library(ISLR)
+nrow(College)
+data(College,package = "ISLR")
+```
+
+## Task 2
+
+```{r}
+Yield = College$Enroll/College$Accept
+College$Yield = Yield
+```
+
+## Task 3
+
+```{r}
+all_indices = c(1:777)
+train_indices=sample(1:777,size=200,replace=FALSE)
+test_indices=setdiff(all_indices,train_indices)
+Train_data=College[train_indices,]
+Test_data=College[test_indices,]
+```
+
+## Task 4
+
+```{r}
+Yield_mod1 <- lm(College$Yield ~ College$Top10perc + College$Outstate + College$Expend,
+                 data=Train_data)
+```
+
+## Task 5
+
+```{r}
+Y_train = Train_data$Yield
+fhat_train = predict(Yield_mod1, newdata = Train_data )
+summary(Yield_mod1)
+MSE_train=mean(Yield_mod1$residuals^2)
+MSE_train
+```
+
+## Task 6
+```{r}
+Yield_mod2 <- lm(College$Yield ~ College$Top10perc + College$Outstate + College$Expend,
+                 data=Test_data)
+Y_test = Test_data$Yield
+fhat_test = predict(Yield_mod2, newdata = Test_data )
+summary(Yield_mod2)
+MSE_test=mean(Yield_mod2$residuals^2)
+MSE_test
+```
 
 ## Test statements
 
