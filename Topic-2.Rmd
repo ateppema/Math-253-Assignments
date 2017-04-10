@@ -1,2 +1,223 @@
 # Topic 2 Exercises: Linear Regression
 
+Aidan Teppema
+
+## Computing - 3.6 , 3.7.13
+
+3.6.1
+
+```{r}
+library(MASS)
+library(ISLR)
+```
+
+```{r}
+?Boston
+```
+
+3.6.2
+
+```{r}
+#fix(Boston)
+names(Boston)
+?Boston
+lm.fit=lm(medv~lstat,data=Boston)
+lm.fit=lm(Boston$medv~Boston$lstat)
+lm.fit
+summary(lm.fit)
+names(lm.fit)
+coef(lm.fit)
+confint(lm.fit)
+predict(lm.fit,data.frame(lstat=(c(5,10,15))),interval="confidence")
+predict(lm.fit,data.frame(lstat=(c(5,10,15))),interval="prediction")
+plot(Boston$lstat,Boston$medv)
+abline(lm.fit)
+abline(lm.fit,lwd=3)
+abline(lm.fit,lwd=3,col="red")
+plot(Boston$lstat,Boston$medv,col="red")
+plot(Boston$lstat,Boston$medv,pch=20)
+plot(Boston$lstat,Boston$medv,pch="+")
+plot(1:20,1:20,pch=1:20)
+par(mfrow=c(2,2))
+plot(lm.fit)
+plot(predict(lm.fit),residuals(lm.fit))
+plot(predict(lm.fit),rstudent(lm.fit))
+plot(hatvalues(lm.fit))
+which.max(hatvalues(lm.fit))
+```
+
+3.6.3
+
+```{r}
+lm.fit=lm(medv~lstat+age,data=Boston)
+summary(lm.fit)
+lm.fit=lm(medv~.,data=Boston)
+summary(lm.fit)
+?summary.lm
+library(car)
+vif(lm.fit)
+lm.fit1=lm(medv~.-age,data=Boston)
+summary(lm.fit1)
+lm.fit1=update(lm.fit,~.-age)
+```
+
+3.6.4
+
+```{r}
+summary(lm(medv~lstat*age,data=Boston))
+```
+
+3.6.5
+
+```{r}
+lm.fit2=lm(medv~lstat+I(lstat^2),data=Boston)
+summary(lm.fit2)
+lm.fit=lm(medv~lstat,data=Boston)
+anova(lm.fit,lm.fit2)
+par(mfrow=c(2,2))
+plot(lm.fit2)
+lm.fit5=lm(Boston$medv~poly(Boston$lstat,5))
+summary(lm.fit5)
+summary(lm(medv~log(rm),data=Boston))
+```
+
+3.6.6
+
+```{r}
+#fix(Carseats)
+names(Carseats)
+lm.fit=lm(Sales~.+Income:Advertising+Price:Age,data=Carseats)
+summary(lm.fit)
+contrasts(Carseats$ShelveLoc)
+?contrasts
+```
+
+3.6.7
+
+```{r}
+LoadLibraries=function(){
+  library(ISLR)
+  library(MASS)
+  print("The libraries have been loaded.")
+  }
+LoadLibraries
+LoadLibraries()
+```
+
+3.7.13
+(a)
+```{r}
+set.seed(1)
+x=rnorm(100,0,1)
+```
+
+(b)
+```{r}
+eps=rnorm(100,0,0.25)
+```
+
+(c)
+```{r}
+y=-1+0.5*x+eps
+length(y)
+```
+The length of y is 100. Bo=-1, B1=0.5.
+
+(d)
+```{r}
+plot(y~x)
+```
+As x increases from -2 to 2, y increases at a steady rate from -2 to 0. The data points appear evenly distributed from -2<y<0, with more clustered around x=0.
+
+(e)
+```{r}
+lm.fite=lm(y~x)
+lm.fite
+```
+The predicted Bo=-1.0094, B1=0.4997. These are very close to the true values: Bo=-1, B1=0.5.
+
+(f)
+```{r}
+plot(y~x)
+abline(lm.fite)
+legend(1.2,-1.5,legend="Least squares",
+       col="black",lty=1:2, cex=0.8)
+```
+
+(g)
+```{r}
+lm.fite2=lm(y~x+I(x^2))
+summary(lm.fite2)
+lm.fite=lm(y~x)
+anova(lm.fite,lm.fite2)
+```
+With our first method of comparing the quadratic model to the single variable model, the p-value on the quadratic term is 0.164, which is not significantly low. When we run anova on both of the models, we find that the f-statistic is 1.968 and the p-value is 0.1638, neither of which would lead us to believe that the quadratic model is better, so we cannot reject anova's null hypothesis that the models perform the same.
+
+(h)
+```{r}
+set.seed(1)
+x2=rnorm(100,0,1)
+eps2=rnorm(100,0,0.1)
+y2=-1+0.5*x2+eps2
+plot(y2~x2)
+lm.fite2=lm(y2~x2)
+lm.fite2
+plot(y2~x2)
+abline(lm.fite2)
+legend(1.2,-1.5,legend="Least squares",
+       col="black",lty=1:2, cex=0.8)
+```
+With less noise in the data there is less variance in the data (the average distance between the data and the least squares line is reduced). The predicted Bo and B1 become closer to the true Bo and B1.
+
+(i)
+```{r}
+set.seed(1)
+x3=rnorm(100,0,1)
+eps3=rnorm(100,0,0.4)
+y3=-1+0.5*x3+eps3
+plot(y3~x3)
+lm.fite3=lm(y3~x3)
+lm.fite3
+plot(y3~x3)
+abline(lm.fite3)
+legend(1.2,-1.5,legend="Least squares",
+       col="black",lty=1:2, cex=0.8)
+```
+With more noise in the data there is more variance in the data (the average distance between the data and the least squares line is increased). The predicted Bo and B1 become further from the true Bo and B1.
+
+(j)
+```{r}
+confint(lm.fite)
+confint(lm.fite2)
+confint(lm.fite3)
+```
+The confidence intervals decrease as the variance decreases. That is, there is less space between 2.5% and 97.5% as the data gets less noisy. We can predict Bo and B1 with more accuracy!
+
+## Theory - Reading questions , 3.7.3 , 3.7.4.
+
+Reading questions
+1. "This is clearly not true in Figure 3.1" because the error of each observation seems to be correlated with the common variance o^2. As each observation becomes further from the mean of the data (as variance increases), it also becomes further from the line of best fit through the data (standard error increases). Therefore, the errors ei of each observation are correlated with the common variance o^2.
+
+2. “In this case we cannot even fit the multiple regression models using least squares" because the number of coefficients we need is greater than the number of observations (p>n) and thus we don't have enough observations to put into the model and explain the coefficients.
+
+3.7.3
+
+(a) iii. is correct. For a fixed IQ and GPA, males earn more on average than females provided GPA is high enough because, although females have a higher y-intercept holding all else constant, the coefficient on the interaction term between gender and GPA is negative, indicating that the slope on the relationship between money earned and GPA is 10 for women as opposed to 20 for men, causing men to eventually catch up to and overtake women in money earned as GPA increases.
+
+(b)
+```{r}
+50+20*(4)+0.07*(110)+35*(1)+0.01*(4*110)-10*(4*1)
+```
+I predict the starting salary to be $137,100.
+
+(c) False. Although the coefficient on the interaction term between GPA and IQ is smaller relative to the other coefficients in this regression, we must consider the size of the numbers we're analyzing. GPA is on a scale of 0-4, which will cause the coefficient to be smaller relative to amount of money earned. We must look at the p-value to check the significance.
+
+3.7.4.
+
+(a) We would expect the residual sum of squares to be lower for the cubic regression for training data, since, although the true relationship is linear, the cubic regression would be able to bend to fit the training data better (overfitting).
+
+(b) We would expect the residual sum of squares to be lower for the linear regression for test data, since the true relationship is linear, the linear model would have less error when applied to a new data set.
+
+(c) Even though we are uncertain of the true relationship between the data, the cubic model would provide a lower RSS than the linear model because of increased flexibility (ability to bend to fit the data). It will be closer to the true model than the linear model in this case.
+
+(d) If I had to guess I would say that the cubic model would provide a lower RSS for the test data as well, but I can't be certain because of the variance in the data and our lack of knowledge about how far the true model really is from linear.
