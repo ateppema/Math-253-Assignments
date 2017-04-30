@@ -1,2 +1,195 @@
 # Topic 1 Exercises
+Aidan Teppema
 
+Discussion questions: ISL 
+2.4.1
+  (a) A flexible model would fare better because a large "n" and small "p" because we will be better able to predict a flexible model that will yeild a small test MSE because of our large sample size.
+  (b) A flexible model would fare worse because a small "n" and large "p" would allow a flexible model to overfit the data easily, resulting in a small training MSE but a large test MSE.
+  (c) A flexible model would fare better because an inflexible model would result in a model that is close to linear or actually linear, which would not be a good representation of this data is highly nonlinear data.
+  (d) A flexible model would fare worse because it would "overfit" the data, attempting to compensate for the variance.
+    
+**2.4.3
+  (a) (In notebook)
+  (b) 
+
+2.4.6
+  When using a parametric statistical learning approach, we make assumptions about the form of f first, then we find its parameters (coefficients). When using a non-parametric approach, we make no explicit assumptions about f and then find a model that suits the data.
+  Parametric is adventagous for both regression and classification probelms because it allows for easier interpretability of the model variables/coefficients. However, it often yields an fhat that is further from the true f than a nonparametric approach would.
+
+Computing assignment: ISL 
+2.4.8
+  (a)
+```{r}
+download.file("http://www-bcf.usc.edu/~gareth/ISL/College.csv",destfile="College.csv")
+college_file_name="/home/local/MAC/ateppema/Math 253 Assignments/College.csv"
+college=read.csv(college_file_name)
+```
+  (b)
+```{r}
+#rownames(college)=college[,1]
+#college
+college=college[,-1]
+#college
+```
+  (c)
+    i.
+```{r}
+summary(college)
+```
+    ii.
+```{r}
+A=college[,1:10]
+pairs(A)
+```
+    iii.
+```{r}
+plot(college$Outstate ~ college$Private)
+```
+    iv.
+```{r}
+Elite=rep("No",nrow(college))
+Elite[college$Top10perc>50]="Yes"
+Elite=as.factor(Elite)
+college=data.frame(college,Elite)
+summary(college$Elite)
+plot(college$Outstate ~ college$Elite)
+```
+There are 78 "elite" universities and 699 universities which are not.
+    v.
+```{r}
+
+```
+hist() 
+    vi.
+I discovered...
+
+2.4.9
+```{r}
+#download.file("http://www-bcf.usc.edu/~gareth/ISL/Auto.csv",destfile="Auto.csv")
+auto_file_name="/home/local/MAC/ateppema/Math 253 Assignments/Auto.csv"
+auto=read.csv(auto_file_name)
+
+auto[auto=="?"]<-NA
+auto
+```
+  (a)
+The quantitative predictors are mpg, cylinders, displacement, horespower, weight, and acceleration.
+The qualitative predictors are year, origin, and name.
+  (b)
+```{r}
+range(auto$mpg)
+range(auto$cylinders)
+range(auto$displacement)
+range(as.numeric(auto$horsepower),na.rm=TRUE)
+range(auto$weight)
+range(auto$acceleration)
+```
+Range for...
+mpg = 9 - 46.6
+cylinders = 3 - 8
+displacement = 68 - 455
+horsepower = 2 - 94
+weight = 1613 - 5140
+acceleration = 8 - 24.8
+  (c)
+```{r}
+mean(auto$mpg)
+mean(auto$cylinders)
+mean(auto$displacement)
+mean(as.numeric(auto$horsepower),na.rm=TRUE)
+mean(auto$weight)
+mean(auto$acceleration)
+```
+
+```{r}
+sd(auto$mpg)
+sd(auto$cylinders)
+sd(auto$displacement)
+sd(auto$horsepower,na.rm=TRUE)
+sd(auto$weight)
+sd(auto$acceleration)
+```
+Mean and standard deviation for...
+mpg = 23.516 , 7.825804
+cylinders = 5.458 , 1.701577
+displacement = 193.533 , 104.3796
+horsepower =  52.16071 , 29.49805
+weight = 2970.262 , 847.9041
+acceleration = 15.556 , 2.749995
+  (d)
+```{r}
+auto2 = auto[-(10:85),]
+dim(auto2) == dim(auto) - c(76,0)
+auto2[9,] == auto[9,]
+auto2[10,] == auto[86,]
+```
+
+```{r}
+mean(auto2$mpg)
+mean(auto2$cylinders)
+mean(auto2$displacement)
+mean(as.numeric(auto2$horsepower),na.rm=TRUE)
+mean(auto2$weight)
+mean(auto2$acceleration)
+```
+
+```{r}
+range(auto2$mpg)
+range(auto2$cylinders)
+range(auto2$displacement)
+range(as.numeric(auto2$horsepower),na.rm=TRUE)
+range(auto2$weight)
+range(auto2$acceleration)
+```
+
+```{r}
+sd(auto2$mpg)
+sd(auto2$cylinders)
+sd(auto2$displacement)
+sd(auto2$horsepower,na.rm=TRUE)
+sd(auto2$weight)
+sd(auto2$acceleration)
+```
+  (e)
+```{r}
+auto
+plot(auto$weight,auto$acceleration)
+plot(auto$horsepower,auto$acceleration)
+```
+Higher weight, lower acceleration.
+Higher horsepower, lower acceleration, however there appear to be 2 split types of horsepower, each with their own downward trend of acceleration.
+  (f)
+```{r}
+plot(auto$weight,auto$mpg)
+plot(auto$acceleration,auto$mpg)
+plot(auto$horsepower,auto$mpg)
+plot(auto$cylinders,auto$mpg)
+plot(auto$displacement,auto$mpg)
+```
+Weight and displacement appear to have the strongest relationship with MPG based on the plots of each variable against mpg.
+
+Theory assignment: ISL 
+2.4.2
+  (a) Classification
+      Inference
+      n = 500
+      p = 4
+  (b) Classification
+      Prediction
+      n = 20
+      p = 14
+  (c) Regression
+      Preditcion
+      n = 52
+      p = 4
+
+2.4.7.
+  (a) 1 = 3
+      2 = 2
+      3 = sqrt(1^2+3^2) = sqrt(10) = ~ 3.2
+      4 = sqrt(1^2+2^2) = sqrt(5) = ~ 2.2 
+      5 = sqrt((-1)^2+1^2) = sqrt(2) = ~ 1.4 
+      6 = sqrt(1^2+1^2+1^2) = sqrt(3) = ~ 1.7 
+  (b) Green; green is the closest when K=1. 
+  (c) Red; 2 of the closest 3 points when K=3 are red.
+  (d) A smaller K is better for non-linear models, because it provides more flexibiliy to better match that model.
