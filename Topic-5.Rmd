@@ -1,2 +1,5 @@
 # Topic 5 Exercises: Cross-Validation
 
+Aidan's work goes here...
+
+There are no book assignments for chapter 5!
