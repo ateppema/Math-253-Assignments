@@ -1,2 +1,55 @@
 # Topic 8 Exercises: Tree-based models
 
+Aidan's work goes here...
+
+8.4.3
+```{r}
+classification_error <- function(p_1) 1 - pmax(p_1, 1 - p_1)
+gini <- function(p_1) p_1 * (1 - p_1)
+cross_entropy <- function(p_1) - (p_1 * log(p_1) + (1 - p_1) * log(1 - p_1))
+x <- seq(0, 1, length = 1000)
+plot(x, classification_error(x), type = "l", ylim = c(0, 0.75))
+lines(x, gini(x), col = "blue")
+lines(x, cross_entropy(x), col = "green")
+```
+
+8.4.4
+```{r}
+probs <- c(0.1, 0.15, 0.2, 0.2, 0.55, 0.6, 0.6, 0.65, 0.7, 0.75)
+# majority_vote 
+mean(probs > 0.5) # so red
+## [1] 0.6
+# average probability
+mean(probs) # so green
+```
+
+8.4.5
+```{r}
+data(RailTrail, package = "mosaicData") 
+train_inds <- sample(nrow(RailTrail), size = nrow(RailTrail) / 2)
+
+library(randomForest)
+
+set.seed(1101) 
+bag_train <- randomForest(volume ~ . , data=RailTrail[train_inds,],
+                          mtry = ncol(RailTrail) - 1, importance = TRUE)
+preds <- predict(bag_train, newdata = RailTrail[ - train_inds, ])
+mse_bag <- mean((RailTrail$volume[-train_inds] - preds)^2)
+mse_bag
+rf_train <- randomForest(volume ~ . , data=RailTrail[train_inds,],
+                          mtry = ncol(RailTrail) / 3, importance = TRUE)
+preds <- predict(rf_train, newdata = RailTrail[ - train_inds, ])
+mse_rf <- mean((RailTrail$volume[-train_inds] - preds)^2)
+mse_rf
+#install.packages("gbm")
+library(gbm)
+boost_train <- gbm(volume ~ . , data=RailTrail[train_inds,],
+                   distribution = "gaussian", n.trees = 5000, interaction.depth = 2)
+preds <- predict(boost_train, newdata = RailTrail[ - train_inds, ], n.trees = 5000)
+mse_boost <- mean((RailTrail$volume[-train_inds] - preds)^2)
+mse_boost
+lm_train <- lm(volume ~ . , data=RailTrail[train_inds,])
+preds <- predict(lm_train, newdata = RailTrail[ - train_inds, ])
+mse_lm <- mean((RailTrail$volume[-train_inds] - preds)^2)
+mse_lm
+```
